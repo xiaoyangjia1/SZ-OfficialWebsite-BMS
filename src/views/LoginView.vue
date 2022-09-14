@@ -1,16 +1,12 @@
 <script setup lang="ts">
+import { login } from "@/api/user";
 import { ref } from "vue";
-import axios from "axios";
 const email = ref("");
 const password = ref("");
 function submit() {
   console.log("email: ", email.value);
-  console.log("password: ", typeof password.value, password.value);
-  axios
-    .post("/api/auth/login", {
-      email: email.value,
-      password: password.value,
-    })
+  console.log("password: ", password.value);
+  login({ email: email.value, password: password.value })
     .then(function (response) {
       console.log(response);
     })
