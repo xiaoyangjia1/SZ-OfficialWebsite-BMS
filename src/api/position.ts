@@ -8,3 +8,10 @@ export function postJob(data: PostJob) {
     data,
   });
 }
+
+export function getJobs() {
+  return request({
+    url: "/api/auth/getJobs",
+    method: "get",
+  });
+}

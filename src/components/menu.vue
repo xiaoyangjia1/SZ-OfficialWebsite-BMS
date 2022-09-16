@@ -13,7 +13,7 @@
       </template>
       <el-menu-item-group>
         <el-menu-item index="/createJob">发布岗位</el-menu-item>
-        <el-menu-item index="1-2">岗位列表</el-menu-item>
+        <el-menu-item index="/jobsList">岗位列表</el-menu-item>
       </el-menu-item-group>
     </el-sub-menu>
     <el-menu-item index="2">
