@@ -12,7 +12,8 @@
         <span>岗位管理</span>
       </template>
       <el-menu-item-group>
-        <el-menu-item index="/createJob">发布岗位</el-menu-item>
+        <el-menu-item index="/createBatch">创建批次</el-menu-item>
+        <el-menu-item index="/createJob">创建岗位</el-menu-item>
         <el-menu-item index="/jobsList">岗位列表</el-menu-item>
       </el-menu-item-group>
     </el-sub-menu>

@@ -5,8 +5,12 @@
     </el-form-item>
     <el-form-item label="招聘项目">
       <el-select v-model="form.batch" placeholder="please select your zone">
-        <el-option label="2022寒假招新" value="shanghai" />
-        <el-option label="2023寒假招新" value="beijing" />
+        <el-option
+          v-for="item in batchList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </el-form-item>
     <el-form-item label="职位类别">
@@ -87,6 +91,7 @@
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
 import { postJob } from "@/api/position";
+import { getAllBatch } from "@/api/batch";
 const category = ref("");
 const options = [
   {
@@ -134,27 +139,43 @@ const form = reactive({
   desc: "",
   requirements: "",
 });
+const batchList = reactive([]);
 
 const onSubmit = () => {
   console.log(form);
 
-    postJob({
-      title: form.title,
-      batch: form.batch,
-      category: form.category,
-      deadline: Date.parse(form.date) / 1000,
-      test: form.test,
-      interview: form.interview,
-      check1: form.check1,
-      check2: form.check2,
-      desc: form.desc,
-      requirements: form.requirements,
+  postJob({
+    title: form.title,
+    batch: form.batch,
+    category: form.category,
+    deadline: Date.parse(form.date) / 1000,
+    test: form.test,
+    interview: form.interview,
+    check1: form.check1,
+    check2: form.check2,
+    desc: form.desc,
+    requirements: form.requirements,
+  })
+    .then(function (res) {
+      console.log(res);
     })
-      .then(function (res) {
-        console.log(res);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    .catch(function (error) {
+      console.log(error);
+    });
 };
+getAllBatch()
+  .then(function (res) {
+    let data = res.data.data;
+    console.log(data)
+    data.forEach((el) => {
+      batchList.push({
+        value: el.Name,
+        label: el.Name,
+      });
+    });
+    console.log(batchList)
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 </script>
