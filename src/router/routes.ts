@@ -21,8 +21,13 @@ export const routes: Array<RouteRecordRaw> = [
         path: "/jobsList",
         name: "jobsList",
         component: () => import("@/views/jobsList.vue"),
-      }
-    ]
+      },
+      {
+        path: "/studentList",
+        name: "studentList",
+        component: () => import("@/views/studentList.vue"),
+      },
+    ],
   },
   {
     path: "/login",

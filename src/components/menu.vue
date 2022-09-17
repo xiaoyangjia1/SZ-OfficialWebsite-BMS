@@ -17,10 +17,16 @@
         <el-menu-item index="/jobsList">岗位列表</el-menu-item>
       </el-menu-item-group>
     </el-sub-menu>
-    <el-menu-item index="2">
-      <el-icon><icon-menu /></el-icon>
-      <span>Navigator Two</span>
-    </el-menu-item>
+    <el-sub-menu index="2">
+      <template #title>
+        <el-icon><location /></el-icon>
+        <span>学生管理</span>
+      </template>
+      <el-menu-item-group>
+        <el-menu-item index="/studentList">学生列表</el-menu-item>
+        <el-menu-item index="/evaluate">评定成绩</el-menu-item>
+      </el-menu-item-group>
+    </el-sub-menu>
   </el-menu>
 </template>
 
