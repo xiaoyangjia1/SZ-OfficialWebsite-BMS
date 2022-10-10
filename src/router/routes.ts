@@ -27,6 +27,11 @@ export const routes: Array<RouteRecordRaw> = [
         name: "studentList",
         component: () => import("@/views/studentList.vue"),
       },
+      {
+        path: "/evaluate",
+        name: "evaluate",
+        component: () => import("@/views/evaluate.vue"),
+      },
     ],
   },
   {
@@ -35,6 +40,6 @@ export const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import("@/views/LoginView.vue"),
+    component: () => import("@/views/Login.vue"),
   },
 ];

@@ -3,7 +3,7 @@ import type { LoginByEmail } from "@/type/user";
 
 export function login(data: LoginByEmail) {
   return request({
-    url: "/api/auth/login",
+    url: "/api/internalLogin",
     method: "post",
     data,
   });
