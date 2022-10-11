@@ -1,4 +1,3 @@
-
 export function setSessionStorage(key: string, value: any): void {
   const str = window.JSON.stringify(value);
   window.sessionStorage.setItem(key, str);
@@ -28,4 +27,3 @@ export function removeLocalStorage(key: string): void {
     window.localStorage.removeItem(key);
   }
 }
-

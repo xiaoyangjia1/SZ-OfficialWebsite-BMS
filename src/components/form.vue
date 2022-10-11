@@ -166,14 +166,14 @@ const onSubmit = () => {
 getAllBatch()
   .then(function (res) {
     let data = res.data.data;
-    console.log(data)
+    console.log(data);
     data.forEach((el) => {
       batchList.push({
         value: el.Name,
         label: el.Name,
       });
     });
-    console.log(batchList)
+    console.log(batchList);
   })
   .catch(function (error) {
     console.log(error);

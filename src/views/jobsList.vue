@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getJobs } from "@/api/position";
-import { reactive } from "@vue/reactivity";
+import { reactive } from "vue";
 
 interface Position {
   ID: number;

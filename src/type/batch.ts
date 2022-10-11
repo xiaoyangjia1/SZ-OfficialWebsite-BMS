@@ -1,3 +1,3 @@
-export interface Batch{
-    name: string
+export interface Batch {
+  name: string;
 }

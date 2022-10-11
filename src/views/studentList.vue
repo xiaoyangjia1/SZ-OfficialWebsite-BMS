@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getResumeById } from "@/api/resume";
 import { getDeliveredInfo } from "@/api/progress";
-import { reactive } from "@vue/reactivity";
+import { reactive } from "vue";
 import { ref } from "vue";
 import { stringify } from "querystring";
 
@@ -19,21 +19,20 @@ interface Position {
 }
 let tableData: Position[] = reactive([]);
 const dialogVisible = ref(false);
-let resume=ref('')
+let resume = ref("");
 function viewResume(row) {
-
   getResumeById(row.Resume)
     .then((res) => {
-      resume.value=JSON.stringify(res.data.data)
+      resume.value = JSON.stringify(res.data.data);
     })
     .catch((error) => {
       console.log(error);
     });
-    dialogVisible.value=true
+  dialogVisible.value = true;
 }
-const handleClose=()=>{
-    dialogVisible.value=false
-}
+const handleClose = () => {
+  dialogVisible.value = false;
+};
 getDeliveredInfo()
   .then((res) => {
     let data = res.data.data;
@@ -91,7 +90,7 @@ getDeliveredInfo()
     width="30%"
     :before-close="handleClose"
   >
-     <el-input v-model="resume" type="textarea" />
+    <el-input v-model="resume" type="textarea" />
   </el-dialog>
 </template>
 <style scoped></style>
