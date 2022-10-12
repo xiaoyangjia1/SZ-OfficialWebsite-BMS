@@ -18,6 +18,8 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
+      imports: ['vitest'],
+      dts: true, // generate TypeScript declaration
       resolvers: [ElementPlusResolver()],
     }),
     Components({
