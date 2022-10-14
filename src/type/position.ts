@@ -1,4 +1,5 @@
 export interface PostJob {
+  pid?: string;
   title: string;
   batch: string;
   category: string;

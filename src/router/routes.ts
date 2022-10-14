@@ -13,9 +13,14 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/createBatch.vue"),
       },
       {
-        path: "/createJob",
-        name: "createJob",
-        component: () => import("@/views/createJob.vue"),
+        path: "/editPosition",
+        name: "editPosition",
+        component: () => import("@/views/editPosition.vue"),
+      },
+      {
+        path: "/editPosition/:pid",
+        name: "editPositionByPid",
+        component: () => import("@/views/editPosition.vue"),
       },
       {
         path: "/jobsList",
