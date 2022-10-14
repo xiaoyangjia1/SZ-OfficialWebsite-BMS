@@ -167,11 +167,12 @@ getAllBatch()
   .then(function (res) {
     let data = res.data.data;
     console.log(data);
-    data.forEach((el) => {
-      batchList.push({
-        value: el.Name,
-        label: el.Name,
-      });
+    data.forEach((el:any) => {
+      const batch_item={
+        value: el.name,
+        label: el.name,
+      }
+      batchList.push(batch_item);
     });
     console.log(batchList);
   })

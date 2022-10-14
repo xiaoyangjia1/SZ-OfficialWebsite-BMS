@@ -3,27 +3,27 @@ import { getJobs } from "@/api/position";
 import { reactive } from "vue";
 
 interface Position {
-  ID: number;
-  Status: number;
-  Title: string;
-  Batch: string;
-  Category: string;
-  Deadline: string;
-  Apply_number: number;
+  it: number;
+  status: number;
+  title: string;
+  batch: string;
+  category: string;
+  deadline: string;
+  apply_number: number;
 }
 let tableData: Position[] = reactive([]);
 getJobs()
   .then(function (res) {
     let data = res.data.data;
-    data.forEach((el) => {
+    data.forEach((el:any) => {
       tableData.push({
-        ID: el.ID,
-        Status: el.Status,
-        Title: el.Title,
-        Batch: el.Batch,
-        Category: el.Category,
-        Deadline: el.Deadline,
-        Apply_number: el.Apply_number,
+        id: el.id,
+        status: el.status,
+        title: el.title,
+        batch: el.batch,
+        category: el.category,
+        deadline: el.deadline,
+        apply_number: el.apply_number,
       });
     });
   })
@@ -38,18 +38,18 @@ getJobs()
     :default-sort="{ prop: 'date', order: 'descending' }"
     style="width: 100%"
   >
-    <el-table-column prop="ID" label="ID" sortable width="180" />
-    <el-table-column prop="Deadline" label="Deadline" sortable width="180" />
-    <el-table-column prop="Title" label="Title" width="180" />
-    <el-table-column prop="Batch" label="Batch" />
-    <el-table-column prop="Category" label="Category" width="180" />
+    <el-table-column prop="id" label="id" sortable width="180" />
+    <el-table-column prop="deadline" label="deadline" sortable width="180" />
+    <el-table-column prop="title" label="title" width="180" />
+    <el-table-column prop="batch" label="batch" />
+    <el-table-column prop="category" label="category" width="180" />
     <el-table-column
-      prop="Apply_number"
-      label="Apply_number"
+      prop="apply_number"
+      label="apply_number"
       sortable
       width="180"
     />
-    <el-table-column prop="Status" label="Status" sortable width="180" />
+    <el-table-column prop="status" label="status" sortable width="180" />
   </el-table>
 </template>
 <style scoped></style>

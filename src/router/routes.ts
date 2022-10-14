@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from "vue-router";
 // 后续将使用webpack将组件分组 /* webpackChunkName: "组名" */
 export const routes: Array<RouteRecordRaw> = [
-  { path: "/", redirect: "/home" },
+  { path: "/", redirect: "/login" },
   {
     path: "/home",
     name: "home",
@@ -40,6 +40,6 @@ export const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import("@/views/login.vue"),
+    component: () => import("@/views/login/index.vue"),
   },
 ];

@@ -7,7 +7,6 @@ const form = reactive({
 
 const onSubmit = () => {
   console.log(form);
-
   createBatch({
     name: form.name,
   })
@@ -21,16 +20,14 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <div>
-    <el-form :model="form" label-width="120px">
-      <el-form-item label="批次名称">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button>Cancel</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+  <el-form :model="form" label-width="120px">
+    <el-form-item label="批次名称">
+      <el-input v-model="form.name" />
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="onSubmit">Create</el-button>
+      <el-button>Cancel</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 <style scoped></style>

@@ -11,7 +11,7 @@ export function createBatch(data: Batch) {
 
 export function getAllBatch() {
   return request({
-    url: "/api/auth/getAllBatch",
+    url: "/api/getAllBatch",
     method: "get",
   });
 }

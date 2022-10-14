@@ -11,7 +11,7 @@ export function postJob(data: PostJob) {
 
 export function getJobs() {
   return request({
-    url: "/api/auth/getJobs",
+    url: "/api/getJobs",
     method: "get",
   });
 }
