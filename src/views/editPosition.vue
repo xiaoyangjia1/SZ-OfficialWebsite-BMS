@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeMount, reactive } from "vue";
-import { getPositionByID, postJob, updataJobInfo } from "@/api/position";
+import { getPosition, postJob, updataJobInfo } from "@/api/position";
 import { getAllBatch } from "@/api/batch";
 import { useRoute } from "vue-router";
 import { getAllCategory } from "@/api/category";
@@ -64,6 +64,7 @@ const onSubmit = () => {
     desc: form.desc,
     requirements: form.requirements,
   };
+  console.log(route.params)
   if (route.params.pid) {
     updataJobInfo({ pid: route.params.pid as string, ...formData })
       .then((res: any) => {
@@ -90,7 +91,7 @@ interface BatchItem {
 const batchList: BatchItem[] = reactive([]);
 onBeforeMount(() => {
   if (route.params.pid) {
-    getPositionByID(route.params.pid as string)
+    getPosition(route.params.pid as string)
       .then((res: any) => {
         const data = res.data.data;
         Object.assign(form, data);

@@ -30,9 +30,9 @@ export function getJobs() {
   });
 }
 
-export function getPositionByID(pid: string) {
+export function getPosition(pid: string) {
   return request({
-    url: "/api/getPositionByID",
+    url: "/api/getPosition",
     method: "get",
     params: {
       pid,
