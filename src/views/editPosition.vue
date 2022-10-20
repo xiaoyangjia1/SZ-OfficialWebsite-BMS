@@ -3,39 +3,36 @@ import { onBeforeMount, reactive } from "vue";
 import { getPositionByID, postJob, updataJobInfo } from "@/api/position";
 import { getAllBatch } from "@/api/batch";
 import { useRoute } from "vue-router";
-
-const options = [
-  {
-    label: "研发",
-    options: [
-      {
-        value: "前端",
-        label: "前端",
-      },
-      {
-        value: "后端",
-        label: "后端",
-      },
-      {
-        value: "客户端",
-        label: "客户端",
-      },
-      {
-        value: "数据挖掘",
-        label: "数据挖掘",
-      },
-    ],
-  },
-  {
-    label: "设计",
-    options: [
-      {
-        value: "交互设计",
-        label: "交互设计",
-      },
-    ],
-  },
-];
+import { getAllCategory } from "@/api/category";
+getAllCategory()
+  .then((res: any) => {
+    console.log(res.data.data);
+    res.data.data.forEach((el: any) => {
+      if (el.pid === 0) {
+        options.push({
+          label: el.name,
+          options: [],
+        });
+      } else {
+        options[el.pid - 1].options.push({
+          value: el.name,
+          label: el.name,
+        });
+      }
+    });
+  })
+  .catch((err: any) => {
+    console.log(err);
+  });
+interface Options_item {
+  label: string;
+  options: Options_childItem[];
+}
+interface Options_childItem {
+  value: string;
+  label: string;
+}
+const options: Options_item[] = reactive([]);
 const form = reactive({
   title: "",
   batch: "",

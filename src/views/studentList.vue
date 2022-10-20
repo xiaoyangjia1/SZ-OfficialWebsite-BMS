@@ -3,12 +3,11 @@ import { getResume } from "@/api/resume";
 import { getDeliveredInfo } from "@/api/progress";
 import { reactive } from "vue";
 import { ref } from "vue";
-import { stringify } from "querystring";
 import { formatDate } from "@/utils/date";
-import { ta } from "element-plus/es/locale";
+import { getAllBatch } from "@/api/batch";
+import { getAllCategory } from "@/api/category";
 
 interface Position {
-  id: number;
   resume: string;
   name: string;
   title: string;
@@ -16,6 +15,45 @@ interface Position {
   category: string;
   deliverTime: string;
 }
+interface Filter_item {
+  text: string;
+  value: string;
+}
+let filterBatchList: Filter_item[] = reactive([]);
+getAllBatch()
+  .then((res: any) => {
+    res.data.data.forEach((el: any) => {
+      filterBatchList.push({
+        text: el.name,
+        value: el.name,
+      });
+    });
+  })
+  .catch((err: any) => {
+    console.log(err);
+  });
+let filterCategoryList: Filter_item[] = reactive([]);
+getAllCategory()
+  .then((res: any) => {
+    console.log(res.data.data);
+    res.data.data.forEach((el: any) => {
+      if (el.pid > 0) {
+        filterCategoryList.push({
+          text: el.name,
+          value: el.name,
+        });
+      }
+    });
+  })
+  .catch((err: any) => {
+    console.log(err);
+  });
+const filterBatch = (value: string, row: any) => {
+  return row.batch === value;
+};
+const filterCategory = (value: string, row: any) => {
+  return row.category === value;
+};
 let tableData: Position[] = reactive([]);
 const dialogVisible = ref(false);
 let resume = ref("");
@@ -34,9 +72,8 @@ const handleClose = () => {
 };
 getDeliveredInfo()
   .then((res) => {
-    res.data.data.forEach((el: any, index: number) => {
+    res.data.data.forEach((el: any) => {
       tableData.push({
-        id: index + 1,
         name: el.name,
         batch: el.batch,
         category: el.category,
@@ -57,10 +94,20 @@ getDeliveredInfo()
     :default-sort="{ prop: 'date', order: 'descending' }"
     style="width: 100%"
   >
-    <el-table-column prop="id" label="id" sortable width="180" />
+    <el-table-column type="index" width="50" />
     <el-table-column prop="name" label="姓名" width="180" />
-    <el-table-column prop="batch" label="批次" />
-    <el-table-column prop="category" label="类别" />
+    <el-table-column
+      prop="batch"
+      label="批次"
+      :filters="filterBatchList"
+      :filter-method="filterBatch"
+    />
+    <el-table-column
+      prop="category"
+      label="类别"
+      :filters="filterCategoryList"
+      :filter-method="filterCategory"
+    />
     <el-table-column prop="title" label="岗位" width="180" />
     <el-table-column prop="deliverTime" label="投递时间" sortable />
     <el-table-column prop="resume" label="简历" width="120">
