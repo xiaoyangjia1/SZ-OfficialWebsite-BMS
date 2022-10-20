@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { getJobs, deleteJob, changeJobStatus } from "@/api/position";
+import { formatDate } from "@/utils/date";
 import { onMounted, reactive } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import {  useRouter } from "vue-router";
 const router = useRouter();
-const route = useRoute();
 interface Position {
   pid: number;
   status: number;
@@ -26,7 +26,7 @@ onMounted(() => {
           title: el.title,
           batch: el.batch,
           category: el.category,
-          deadline: el.deadline,
+          deadline: formatDate(el.deadline),
           apply_number: el.apply_number,
           btnText: el.status === 1 ? "撤销" : "恢复",
         });
@@ -39,7 +39,6 @@ onMounted(() => {
 const handleStatus = (index: any, row: any) => {
   changeJobStatus(row.pid)
     .then((res: any) => {
-      console.log(res);
       tableData[index].status = tableData[index].status === 1 ? 0 : 1;
       tableData[index].btnText =
         tableData[index].status === 1 ? "撤销" : "恢复";
@@ -54,13 +53,13 @@ const handleEdit = (index: any, row: any) => {
 const handleDelete = (index: any, row: any) => {
   deleteJob(row.pid)
     .then((res: any) => {
-      console.log(res);
       tableData.splice(index, 1);
     })
     .catch((err: any) => {
       console.log(err);
     });
 };
+
 </script>
 
 <template>
@@ -109,4 +108,5 @@ const handleDelete = (index: any, row: any) => {
     </el-table-column>
   </el-table>
 </template>
-<style scoped></style>
+<style scoped lang="scss">
+</style>

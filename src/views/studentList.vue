@@ -1,31 +1,30 @@
 <script setup lang="ts">
-import { getResumeById } from "@/api/resume";
+import { getResume } from "@/api/resume";
 import { getDeliveredInfo } from "@/api/progress";
 import { reactive } from "vue";
 import { ref } from "vue";
 import { stringify } from "querystring";
+import { formatDate } from "@/utils/date";
+import { ta } from "element-plus/es/locale";
 
 interface Position {
-  ID: number;
-  Sid: string;
-  Pid: string;
-  Resume: string;
-  //     Name: number;
-  //   Batch: string;
-  //   Category: string;
-  //   deliverTime: string;
-  //   progress: string;
-  //   status: number;
+  id: number;
+  resume: string;
+  name: string;
+  title: string;
+  batch: string;
+  category: string;
+  deliverTime: string;
 }
 let tableData: Position[] = reactive([]);
 const dialogVisible = ref(false);
 let resume = ref("");
-function viewResume(row) {
-  getResumeById(row.Resume)
-    .then((res) => {
+function viewResume(row: any) {
+  getResume(row.resume)
+    .then((res: any) => {
       resume.value = JSON.stringify(res.data.data);
     })
-    .catch((error) => {
+    .catch((error: any) => {
       console.log(error);
     });
   dialogVisible.value = true;
@@ -35,16 +34,17 @@ const handleClose = () => {
 };
 getDeliveredInfo()
   .then((res) => {
-    let data = res.data.data;
-    data.forEach((el) => {
+    res.data.data.forEach((el: any, index: number) => {
       tableData.push({
-        ID: el.ID,
-        Sid: el.Sid,
-        Pid: el.Pid,
-        Resume: el.Sid,
+        id: index + 1,
+        name: el.name,
+        batch: el.batch,
+        category: el.category,
+        title: el.title,
+        deliverTime: formatDate(el.created_at),
+        resume: el.email,
       });
     });
-    console.log(res.data.data);
   })
   .catch((error) => {
     console.log(error);
@@ -57,10 +57,13 @@ getDeliveredInfo()
     :default-sort="{ prop: 'date', order: 'descending' }"
     style="width: 100%"
   >
-    <el-table-column prop="ID" label="ID" sortable width="180" />
-    <el-table-column prop="Sid" label="Sid" width="180" />
-    <el-table-column prop="Pid" label="Pid" width="180" />
-    <el-table-column label="Resume" width="120">
+    <el-table-column prop="id" label="id" sortable width="180" />
+    <el-table-column prop="name" label="姓名" width="180" />
+    <el-table-column prop="batch" label="批次" />
+    <el-table-column prop="category" label="类别" />
+    <el-table-column prop="title" label="岗位" width="180" />
+    <el-table-column prop="deliverTime" label="投递时间" sortable />
+    <el-table-column prop="resume" label="简历" width="120">
       <template #default="scope">
         <el-button
           link
@@ -71,18 +74,6 @@ getDeliveredInfo()
         >
       </template>
     </el-table-column>
-    <!-- <el-table-column prop="Resume" label="Resume" width="180" /> -->
-    <!-- <el-table-column prop="Name" label="Name" width="180" />
-    <el-table-column prop="Batch" label="Batch" />
-    <el-table-column prop="Category" label="Category" width="180" />
-    <el-table-column
-      prop="DeliverTime"
-      label="DeliverTime"
-      sortable
-      width="180"
-    />
-    <el-table-column prop="Progress" label="Progress" />
-    <el-table-column prop="Status" label="Status" width="180" /> -->
   </el-table>
   <el-dialog
     v-model="dialogVisible"

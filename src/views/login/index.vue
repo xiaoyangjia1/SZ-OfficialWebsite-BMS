@@ -28,7 +28,7 @@ const onSubmit = () => {
         console.log(data);
         setLocalStorage("token_type", data.token_type);
         setLocalStorage("access_token", data.access_token);
-        router.push("/home");
+        router.push("/createBatch");
       }
     })
     .catch(function (error) {
