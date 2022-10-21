@@ -1,25 +1,25 @@
 import request from "@/utils/request";
 import type { PostJob } from "@/type/position";
 
-export function postJob(data: PostJob) {
+export function postJob(bodyData: PostJob) {
   return request({
     url: "/api/auth/postJob",
     method: "post",
-    data,
+    bodyData,
   });
 }
 export function changeJobStatus(pid: string) {
   return request({
     url: "/api/auth/changeJobStatus",
     method: "post",
-    data: { pid },
+    bodyData: { pid },
   });
 }
-export function updataJobInfo(data: PostJob) {
+export function updataJobInfo(bodyData: PostJob) {
   return request({
     url: "/api/auth/updataJobInfo",
     method: "post",
-    data,
+    bodyData,
   });
 }
 
@@ -44,6 +44,6 @@ export function deleteJob(pid: string) {
   return request({
     url: "/api/auth/deleteJob",
     method: "post",
-    data: { pid },
+    bodyData: { pid },
   });
 }

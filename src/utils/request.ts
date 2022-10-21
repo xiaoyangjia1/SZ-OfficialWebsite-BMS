@@ -7,10 +7,9 @@ const service = axios.create({
 });
 service.interceptors.request.use(
   (config: any) => {
-    const token_type = getLocalStorage("token_type");
     const access_token = getLocalStorage("access_token");
     if (access_token) {
-      config.headers.Authorization = `${token_type} ${access_token}`;
+      config.headers.Authorization = `Bearer ${access_token}`;
     }
     return config;
   },
@@ -20,4 +19,27 @@ service.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-export default service;
+interface Request {
+  url: string;
+  method: string;
+  bodyData?: unknown;
+  params?: unknown;
+}
+const request = async ({ url, method, bodyData, params }: Request) => {
+  const { data: resData } = await service({
+    url,
+    method,
+    data: bodyData,
+    params,
+  });
+  let data = null,
+    error = null;
+  if (resData.error_code === 0) {
+    data = resData.data;
+  } else {
+    error = new Error(resData.message);
+  }
+  return { data, error };
+};
+
+export default request;

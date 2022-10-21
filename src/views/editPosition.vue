@@ -4,26 +4,6 @@ import { getPosition, postJob, updataJobInfo } from "@/api/position";
 import { getAllBatch } from "@/api/batch";
 import { useRoute } from "vue-router";
 import { getAllCategory } from "@/api/category";
-getAllCategory()
-  .then((res: any) => {
-    console.log(res.data.data);
-    res.data.data.forEach((el: any) => {
-      if (el.pid === 0) {
-        options.push({
-          label: el.name,
-          options: [],
-        });
-      } else {
-        options[el.pid - 1].options.push({
-          value: el.name,
-          label: el.name,
-        });
-      }
-    });
-  })
-  .catch((err: any) => {
-    console.log(err);
-  });
 interface Options_item {
   label: string;
   options: Options_childItem[];
@@ -32,8 +12,26 @@ interface Options_childItem {
   value: string;
   label: string;
 }
-const options: Options_item[] = reactive([]);
-const form = reactive({
+interface BatchItem {
+  value: string;
+  label: string;
+}
+interface Position {
+  title: string;
+  batch: string;
+  category: string;
+  deadline: string;
+  test: number;
+  interview: number;
+  check1: number;
+  check2: number;
+  desc: string;
+  requirements: string;
+  [key: string]: string | number;
+}
+const options: { value: Options_item[] } = reactive({ value: [] });
+const batchList: { value: BatchItem[] } = reactive({ value: [] });
+const form: Position = reactive({
   title: "",
   batch: "",
   deadline: "",
@@ -42,80 +40,64 @@ const form = reactive({
   interview: 1,
   check1: 1,
   check2: 0,
-  type: [],
   desc: "",
   requirements: "",
 });
 const route = useRoute();
-const onSubmit = () => {
+const { pid } = route.params;
+onBeforeMount(() => {
+  getAllBatchAPICall();
+  getAllCategoryAPICall();
+  getPositionAPICall();
+});
+const getAllCategoryAPICall = async () => {
+  const { data, error } = await getAllCategory();
+  data.forEach((el: any) => {
+    if (el.pid === 0) {
+      options.value.push({
+        label: el.name,
+        options: [],
+      });
+    } else {
+      options.value[el.pid - 1].options.push({
+        value: el.name,
+        label: el.name,
+      });
+    }
+  });
+};
+const getAllBatchAPICall = async () => {
+  const { data, error } = await getAllBatch();
+  batchList.value = data.map((el: any) => {
+    return {
+      value: el.name,
+      label: el.name,
+    };
+  });
+};
+const getPositionAPICall = async () => {
+  if (pid) {
+    const { data, error } = await getPosition(pid as string);
+    for (let key in form) {
+      form[key] = data[key];
+    }
+  }
+};
+const onSubmit = async () => {
   const deadline =
     typeof form.deadline === "string"
       ? Date.parse(form.deadline) / 1000
       : Number(form.deadline) / 1000;
-  const formData = {
-    title: form.title,
-    batch: form.batch,
-    category: form.category,
-    deadline,
-    test: form.test,
-    interview: form.interview,
-    check1: form.check1,
-    check2: form.check2,
-    desc: form.desc,
-    requirements: form.requirements,
-  };
-  console.log(route.params)
-  if (route.params.pid) {
-    updataJobInfo({ pid: route.params.pid as string, ...formData })
-      .then((res: any) => {
-        console.log(res);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+  if (pid) {
+    const { data, error } = await updataJobInfo({
+      pid: pid as string,
+      ...form,
+      deadline,
+    });
   } else {
-    postJob(formData)
-      .then(function (res) {
-        console.log(res);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    const { data, error } = await postJob({ ...form, deadline });
   }
 };
-
-interface BatchItem {
-  value: string;
-  label: string;
-}
-const batchList: BatchItem[] = reactive([]);
-onBeforeMount(() => {
-  if (route.params.pid) {
-    getPosition(route.params.pid as string)
-      .then((res: any) => {
-        const data = res.data.data;
-        Object.assign(form, data);
-        console.log(form);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
-  }
-  getAllBatch()
-    .then((res: any) => {
-      let data = res.data.data;
-      data.forEach((el: any) => {
-        const batch_item = {
-          value: el.name,
-          label: el.name,
-        };
-        batchList.push(batch_item);
-      });
-    })
-    .catch((err: any) => {
-      console.log(err);
-    });
-});
 </script>
 
 <template>
@@ -123,10 +105,10 @@ onBeforeMount(() => {
     <el-form-item label="标题">
       <el-input v-model="form.title" />
     </el-form-item>
-    <el-form-item label="招聘项目">
-      <el-select v-model="form.batch" placeholder="please select your zone">
+    <el-form-item label="招新项目">
+      <el-select v-model="form.batch" placeholder="选择招新项目">
         <el-option
-          v-for="item in batchList"
+          v-for="item in batchList.value"
           :key="item.value"
           :label="item.label"
           :value="item.value"
@@ -134,9 +116,9 @@ onBeforeMount(() => {
       </el-select>
     </el-form-item>
     <el-form-item label="职位类别">
-      <el-select v-model="form.category" placeholder="please select your zone">
+      <el-select v-model="form.category" placeholder="选择职位类别">
         <el-option-group
-          v-for="group in options"
+          v-for="group in options.value"
           :key="group.label"
           :label="group.label"
         >

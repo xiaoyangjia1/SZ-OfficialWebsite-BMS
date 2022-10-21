@@ -18,22 +18,17 @@ const rules = reactive<FormRules>({
   password: [{ required: true, message: "请输入密码", trigger: "blur" }],
 });
 
-const onSubmit = () => {
-  login({ email: form.email, password: form.password })
-    .then(function (res) {
-      if (res.data.error_code > 0) {
-        console.log(res.data.message);
-      } else {
-        let data = res.data.data;
-        console.log(data);
-        setLocalStorage("token_type", data.token_type);
-        setLocalStorage("access_token", data.access_token);
-        router.push("/createBatch");
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+const onSubmit = async () => {
+  const { data, error } = await login({
+    email: form.email,
+    password: form.password,
+  });
+  if (error) {
+    console.log(error);
+    return;
+  }
+  setLocalStorage("access_token", data.access_token);
+  router.push("/createBatch");
 };
 </script>
 

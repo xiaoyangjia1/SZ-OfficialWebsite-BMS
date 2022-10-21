@@ -32,11 +32,6 @@ export const routes: Array<RouteRecordRaw> = [
         name: "studentList",
         component: () => import("@/views/studentList.vue"),
       },
-      {
-        path: "/evaluate",
-        name: "evaluate",
-        component: () => import("@/views/evaluate.vue"),
-      },
     ],
   },
   {

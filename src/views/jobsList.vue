@@ -2,7 +2,7 @@
 import { getJobs, deleteJob, changeJobStatus } from "@/api/position";
 import { formatDate } from "@/utils/date";
 import { onMounted, reactive } from "vue";
-import {  useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 const router = useRouter();
 interface Position {
   pid: number;
@@ -14,34 +14,31 @@ interface Position {
   apply_number: number;
   btnText: string;
 }
-let tableData: Position[] = reactive([]);
-onMounted(() => {
-  getJobs()
-    .then(function (res) {
-      let data = res.data.data;
-      data.forEach((el: any) => {
-        tableData.push({
-          pid: el.pid,
-          status: el.status,
-          title: el.title,
-          batch: el.batch,
-          category: el.category,
-          deadline: formatDate(el.deadline),
-          apply_number: el.apply_number,
-          btnText: el.status === 1 ? "撤销" : "恢复",
-        });
-      });
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+let tableData: { value: Position[] } = reactive({ value: [] });
+onMounted(async () => {
+  const { data, error } = await getJobs();
+  tableData.value = data.map(
+    ({ pid, status, title, batch, category, deadline, apply_number }: any) => {
+      return {
+        pid,
+        status,
+        title,
+        batch,
+        category,
+        deadline: formatDate(deadline),
+        apply_number,
+        btnText: status === 1 ? "撤销" : "恢复",
+      };
+    }
+  );
 });
 const handleStatus = (index: any, row: any) => {
   changeJobStatus(row.pid)
     .then((res: any) => {
-      tableData[index].status = tableData[index].status === 1 ? 0 : 1;
-      tableData[index].btnText =
-        tableData[index].status === 1 ? "撤销" : "恢复";
+      tableData.value[index].status =
+        tableData.value[index].status === 1 ? 0 : 1;
+      tableData.value[index].btnText =
+        tableData.value[index].status === 1 ? "撤销" : "恢复";
     })
     .catch((err: any) => {
       console.log(err);
@@ -53,18 +50,17 @@ const handleEdit = (index: any, row: any) => {
 const handleDelete = (index: any, row: any) => {
   deleteJob(row.pid)
     .then((res: any) => {
-      tableData.splice(index, 1);
+      tableData.value.splice(index, 1);
     })
     .catch((err: any) => {
       console.log(err);
     });
 };
-
 </script>
 
 <template>
   <el-table
-    :data="tableData"
+    :data="tableData.value"
     :default-sort="{ prop: 'date', order: 'descending' }"
     style="width: 100%"
   >
@@ -108,5 +104,4 @@ const handleDelete = (index: any, row: any) => {
     </el-table-column>
   </el-table>
 </template>
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>
