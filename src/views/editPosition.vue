@@ -2,8 +2,10 @@
 import { onBeforeMount, reactive } from "vue";
 import { getPosition, postJob, updataJobInfo } from "@/api/position";
 import { getAllBatch } from "@/api/batch";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { getAllCategory } from "@/api/category";
+import { ElMessage } from "element-plus";
+
 interface Options_item {
   label: string;
   options: Options_childItem[];
@@ -37,13 +39,14 @@ const form: Position = reactive({
   deadline: "",
   category: "",
   test: 0,
-  interview: 1,
-  check1: 1,
+  interview: 0,
+  check1: 0,
   check2: 0,
   desc: "",
   requirements: "",
 });
 const route = useRoute();
+const router = useRouter();
 const { pid } = route.params;
 onBeforeMount(() => {
   getAllBatchAPICall();
@@ -89,13 +92,40 @@ const onSubmit = async () => {
       ? Date.parse(form.deadline) / 1000
       : Number(form.deadline) / 1000;
   if (pid) {
-    const { data, error } = await updataJobInfo({
+    const { error } = await updataJobInfo({
       pid: pid as string,
       ...form,
       deadline,
     });
+    if (!error) {
+      ElMessage.success({
+        message: "岗位信息更新成功.",
+        duration: 1000,
+        onClose: () => {
+          router.push("/jobsList");
+        },
+      });
+    } else {
+      ElMessage.error({
+        message: "岗位信息更新失败.",
+      });
+    }
   } else {
-    const { data, error } = await postJob({ ...form, deadline });
+    const { error } = await postJob({ ...form, deadline });
+    if (!error) {
+      ElMessage.success({
+        message: "岗位发布成功.",
+        duration: 1000,
+        onClose: () => {
+          console.log("1111111");
+          router.push("/jobsList");
+        },
+      });
+    } else {
+      ElMessage.error({
+        message: "岗位发布失败.",
+      });
+    }
   }
 };
 </script>
@@ -167,14 +197,32 @@ const onSubmit = async () => {
       />
     </el-form-item>
     <el-form-item label="职位描述">
-      <el-input v-model="form.desc" type="textarea" />
+      <el-input
+        v-model="form.desc"
+        type="textarea"
+        rows="10"
+        maxlength="300"
+        show-word-limit
+      />
     </el-form-item>
     <el-form-item label="职位要求">
-      <el-input v-model="form.requirements" type="textarea" />
+      <el-input
+        v-model="form.requirements"
+        type="textarea"
+        rows="10"
+        maxlength="300"
+        show-word-limit
+      />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">发布</el-button>
+      <el-button type="primary" @click="onSubmit">{{
+        pid ? "更新岗位信息" : "发布岗位"
+      }}</el-button>
     </el-form-item>
   </el-form>
 </template>
-<style scoped></style>
+<style scoped lang="scss">
+.el-form {
+  max-width: 700px;
+}
+</style>

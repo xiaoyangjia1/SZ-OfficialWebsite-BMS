@@ -8,7 +8,7 @@ const loginOut=()=>{
 <template>
   <el-container>
     <el-header
-      ><img src="@/assets/logo.jpg" />
+      ><img src="@/assets/logo1.svg" />
       <el-button type="primary" @click="loginOut">登出</el-button></el-header
     >
     <el-container>
@@ -23,10 +23,15 @@ const loginOut=()=>{
 <style scoped lang="scss">
 .el-container {
   width: 100vw;
+  height: 100vh;
   header {
-    background-color: #222;
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 50px;
     img {
-      width: 60px;
+      width: 250px;
       height: 60px;
     }
   }

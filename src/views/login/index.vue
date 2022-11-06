@@ -33,7 +33,6 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <main>
     <el-form :model="form" label-width="120px" :rules="rules">
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="form.email" />
@@ -45,5 +44,4 @@ const onSubmit = async () => {
         <el-button type="primary" @click="onSubmit">login</el-button>
       </el-form-item>
     </el-form>
-  </main>
 </template>
