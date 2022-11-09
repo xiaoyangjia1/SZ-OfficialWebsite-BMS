@@ -86,9 +86,8 @@ const onCreateBatch = async () => {
       prop="apply_number"
       label="投递人数"
       sortable
-      width="180"
     />
-    <el-table-column prop="status" label="状态" sortable width="180">
+    <el-table-column prop="status" label="状态" >
       <template #default="scope">
         <el-tag
           class="ml-2"
@@ -97,7 +96,7 @@ const onCreateBatch = async () => {
         >
       </template>
     </el-table-column>
-    <el-table-column prop="operation" label="操作" sortable width="180">
+    <el-table-column prop="operation" label="操作">
       <template #default="scope">
         <el-button
           link

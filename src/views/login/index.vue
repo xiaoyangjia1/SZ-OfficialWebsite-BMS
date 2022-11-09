@@ -27,8 +27,8 @@ const onSubmit = async () => {
     console.log(error);
     return;
   }
-  setLocalStorage("access_token", data.access_token);
-  router.push("/createBatch");
+  setLocalStorage("token", data.access_token);
+  router.push("/batchList");
 };
 </script>
 

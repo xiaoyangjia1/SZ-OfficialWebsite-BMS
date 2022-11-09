@@ -8,3 +8,15 @@ export function login(bodyData: LoginByEmail) {
     bodyData,
   });
 }
+export function logout() {
+  return request({
+    url: "/api/auth/logout",
+    method: "post",
+  });
+}
+export function judgeLogin() {
+  return request({
+    url: "/api/auth/judgeLogin",
+    method: "get",
+  });
+}

@@ -1,15 +1,28 @@
 <script setup lang="ts">
+import { judgeLogin, logout } from "@/api/user";
 import Menu from "@/components/menu.vue";
 import router from "@/router";
-const loginOut=()=>{
-  router.push("/login");
-}
+import { onMounted } from "vue";
+const handleLogout = async () => {
+  const { error } = await logout();
+  if (!error) {
+    router.push("/login");
+  }
+};
+onMounted(async () => {
+  const { data,error } = await judgeLogin();
+  console.log(data)
+  console.log(error)
+  if (error) {
+    router.push("/login");
+  }
+});
 </script>
 <template>
   <el-container>
     <el-header
       ><img src="@/assets/logo1.svg" />
-      <el-button type="primary" @click="loginOut">登出</el-button></el-header
+      <el-button type="primary" @click="handleLogout">登出</el-button></el-header
     >
     <el-container>
       <el-aside width="200px">

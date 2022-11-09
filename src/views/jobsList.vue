@@ -80,18 +80,13 @@ const handleDelete = async (pid: string) => {
     :default-sort="{ prop: 'date', order: 'descending' }"
     style="width: 100%"
   >
-    <el-table-column prop="pid" label="pid" sortable width="180" />
-    <el-table-column prop="deadline" label="截止日期" sortable width="180" />
-    <el-table-column prop="title" label="标题" width="180" />
+    <el-table-column prop="pid" label="pid" sortable />
+    <el-table-column prop="deadline" label="截止日期" sortable />
+    <el-table-column prop="title" label="标题" />
     <el-table-column prop="batch" label="批次" />
-    <el-table-column prop="category" label="类别" width="180" />
-    <el-table-column
-      prop="apply_number"
-      label="投递人数"
-      sortable
-      width="180"
-    />
-    <el-table-column prop="status" label="状态" sortable width="180">
+    <el-table-column prop="category" label="类别" />
+    <el-table-column prop="apply_number" label="投递人数" sortable />
+    <el-table-column prop="status" label="状态" sortable>
       <template #default="scope">
         <el-tag
           class="ml-2"
@@ -100,7 +95,7 @@ const handleDelete = async (pid: string) => {
         >
       </template>
     </el-table-column>
-    <el-table-column prop="operation" label="操作" sortable width="180">
+    <el-table-column prop="operation" label="操作" sortable>
       <template #default="scope">
         <el-button
           link

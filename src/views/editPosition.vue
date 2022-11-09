@@ -117,11 +117,11 @@ const onSubmit = async () => {
         message: "岗位发布成功.",
         duration: 1000,
         onClose: () => {
-          console.log("1111111");
           router.push("/jobsList");
         },
       });
     } else {
+      console.log(error)
       ElMessage.error({
         message: "岗位发布失败.",
       });

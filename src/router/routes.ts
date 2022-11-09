@@ -8,9 +8,9 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/home/index.vue"),
     children: [
       {
-        path: "/createBatch",
-        name: "createBatch",
-        component: () => import("@/views/createBatch.vue"),
+        path: "/batchList",
+        name: "batchList",
+        component: () => import("@/views/batchList.vue"),
       },
       {
         path: "/editPosition",

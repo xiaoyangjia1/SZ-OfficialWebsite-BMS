@@ -7,7 +7,7 @@ const service = axios.create({
 });
 service.interceptors.request.use(
   (config: any) => {
-    const access_token = getLocalStorage("access_token");
+    const access_token = getLocalStorage("token");
     if (access_token) {
       config.headers.Authorization = `Bearer ${access_token}`;
     }
@@ -32,6 +32,7 @@ const request = async ({ url, method, bodyData, params }: Request) => {
     data: bodyData,
     params,
   });
+  console.log(resData)
   let data = null,
     error = null;
   if (resData.error_code === 0) {

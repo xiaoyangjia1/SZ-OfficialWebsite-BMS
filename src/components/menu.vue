@@ -19,7 +19,7 @@ const handleClose = (key: string, keyPath: string[]) => {
         <span>招新管理</span>
       </template>
       <el-menu-item-group>
-        <el-menu-item index="/createBatch">批次管理</el-menu-item>
+        <el-menu-item index="/batchList">批次管理</el-menu-item>
         <el-menu-item index="/editPosition">编辑岗位</el-menu-item>
         <el-menu-item index="/jobsList">岗位列表</el-menu-item>
         <el-menu-item index="/studentList">学生管理</el-menu-item>

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { getResume } from "@/api/resume";
-import { getDeliveredInfo, submitEpicycleResult } from "@/api/progress";
+import { getDeliveredInfo } from "@/api/progress";
 import { getAllBatch } from "@/api/batch";
 import { getAllCategory } from "@/api/category";
 import { formatDate } from "@/utils/date";
-import { onBeforeMount, onMounted, reactive } from "vue";
+import { onBeforeMount, reactive } from "vue";
 import { ref } from "vue";
 import { computed } from "@vue/reactivity";
+import Steps from "@/components/steps.vue";
+import type { Progress } from "@/type/progress";
+
 
 interface Position {
   pid: string;
@@ -21,21 +24,6 @@ interface Position {
   check2: number;
   offer: number;
   created_at: string;
-}
-interface DeliveredInfo extends Position {
-  readonly id: number;
-  readonly files1: string;
-  readonly files2: string;
-  readonly link1: string;
-  readonly link2: string;
-  readonly updated_at: string;
-}
-interface TableItem extends Position {
-  progress: string;
-  step: number;
-  steps: string[];
-  epicycle: string;
-  status: string;
 }
 interface Filter_item {
   text: string;
@@ -52,11 +40,11 @@ const batchList: { value: Filter_item[] } = reactive({
 const categoryList: { value: Filter_item[] } = reactive({
   value: [],
 });
-const tableData: { value: TableItem[] } = reactive({ value: [] });
+const tableData: { value: Position[] } = reactive({ value: [] });
 const searchName = ref("");
 const filterTableData = computed(() =>
   tableData.value.filter(
-    (el: TableItem) => !searchName.value || el.name.includes(searchName.value)
+    (el: Position) => !searchName.value || el.name.includes(searchName.value)
   )
 );
 const dialogVisible = ref(false);
@@ -99,8 +87,8 @@ const getDeliveredInfoAPICall = async () => {
     console.log(error);
     return;
   }
-
-  tableData.value = data.map((el: DeliveredInfo) => {
+  console.log(data)
+  tableData.value = (data as Progress[]).map((el: Progress) => {
     const {
       pid,
       email,
@@ -115,26 +103,7 @@ const getDeliveredInfoAPICall = async () => {
       offer,
       created_at,
     } = el;
-    const { step, status, epicycle, progress } = judgeStep([
-      test,
-      interview,
-      check1,
-      check2,
-    ]);
-    const steps = [];
-    if (test) {
-      steps.push("笔试");
-    }
-    if (interview) {
-      steps.push("面试");
-    }
-    if (check1) {
-      steps.push("一轮考核");
-    }
-    if (check2) {
-      steps.push("二轮考核");
-    }
-    steps.push("Offer");
+    const progress="nihao"
     return {
       pid,
       email,
@@ -148,76 +117,22 @@ const getDeliveredInfoAPICall = async () => {
       check1,
       check2,
       offer,
-      progress,
-      step,
-      steps,
-      epicycle,
-      status,
     };
   });
 };
-const judgeStep = (stepArr: number[]) => {
-  let step = 0,
-    status = "process",
-    progress = "",
-    epicycle = "";
-  for (let i = 0; i < 4; i++) {
-    if (stepArr[i] === 1) {
-      if (i === 0) {
-        epicycle = "test";
-      } else if (i === 1) {
-        epicycle = "interview";
-      } else if (i === 2) {
-        epicycle = "check1";
-      } else {
-        epicycle = "check2";
-      }
-      status = "process";
-      progress =
-        i === 0 ? "笔试" : i === 1 ? "面试" : i === 2 ? "一轮考核" : "二轮考核";
-      break;
-    }
-    if (stepArr[i] === 2) {
-      progress = "录用中";
-      step++;
-      if (i === 3) {
-        epicycle = "offer";
-        progress = "已录用";
-      }
-    }
-    if (stepArr[i] === 3) {
-      status = "error";
-      progress = "已结束";
-      break;
-    }
-  }
-  return { step, status, progress, epicycle };
-};
-const handleFilter = (value: string, row: TableItem, column: any) => {
-  const property: keyof TableItem = column.property;
+const handleFilter = (value: string, row: Position, column: any) => {
+  const property: keyof Position = column.property;
   return row[property] === value;
 };
-const handleViewResume = async (row: TableItem) => {
+const handleViewResume = async (row: Position) => {
   const { data, error } = await getResume(row.email);
-  resume.value = JSON.stringify(data);
-  dialogVisible.value = true;
+  if (!error) {
+    resume.value = JSON.stringify(data);
+    dialogVisible.value = true;
+  }
 };
 const handleClose = () => {
   dialogVisible.value = false;
-};
-const handleNext = async (row: TableItem, result: number) => {
-  if (result === 2) {
-    row.step++;
-  } else {
-    row.status = "error";
-  }
-  const { email, pid, epicycle } = row;
-  const { data, error } = await submitEpicycleResult({
-    email,
-    pid,
-    epicycle,
-    result,
-  });
 };
 </script>
 
@@ -225,39 +140,31 @@ const handleNext = async (row: TableItem, result: number) => {
   <el-table
     :data="filterTableData"
     :default-sort="{ prop: 'date', order: 'descending' }"
-    style="width: 100%"
   >
     <el-table-column type="expand">
       <template #default="props">
-        <el-steps
-          :active="props.row.step"
-          :process-status="props.row.status"
-          finish-status="success"
-        >
-          <el-step
-            v-for="(step, index) in props.row.steps"
-            :title="step"
-            :key="index"
-          />
-        </el-steps>
-        <el-button
-          type="success"
-          :disabled="props.row.status === 'error'"
-          style="margin-top: 12px"
-          @click="handleNext(props.row, 2)"
-          >通过</el-button
-        >
-        <el-button
-          type="danger"
-          :disabled="props.row.status === 'error'"
-          style="margin-top: 12px"
-          @click="handleNext(props.row, 3)"
-          >未通过</el-button
-        >
+        <Steps
+          :row="{
+            pid: props.row.pid,
+            email: props.row.email,
+            test: props.row.test,
+            interview: props.row.interview,
+            check1: props.row.check1,
+            check2: props.row.check2,
+            offer: props.row.offer,
+          }"
+        />
+        <Files
+          :row="{
+            batch: props.row.batch,
+            title: props.row.title,
+            email: props.row.email,
+          }"
+        />
       </template>
     </el-table-column>
-    <el-table-column type="index" width="50" />
-    <el-table-column prop="name" label="姓名" width="180">
+    <el-table-column type="index" />
+    <el-table-column prop="name" label="姓名">
       <template #header>
         <el-input v-model="searchName" size="small" placeholder="搜索名字" />
       </template>
@@ -274,10 +181,9 @@ const handleNext = async (row: TableItem, result: number) => {
       :filters="categoryList.value"
       :filter-method="handleFilter"
     />
-    <el-table-column prop="title" label="岗位" width="180" />
+    <el-table-column prop="title" label="岗位" />
     <el-table-column prop="created_at" label="投递时间" sortable />
-    <el-table-column prop="progress" label="流程" />
-    <el-table-column prop="resume" label="简历" width="120">
+    <el-table-column prop="resume" label="简历">
       <template #default="scope">
         <el-button
           link
