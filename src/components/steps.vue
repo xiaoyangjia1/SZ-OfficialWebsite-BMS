@@ -18,6 +18,7 @@ const { pid, email, test, interview, check1, check2, offer } = row;
 const steps = ({
   value: [],
 } = reactive({ value: [test, interview, check1, check2, offer] }));
+// 计算当前的索引
 const activeIndex = computed(() => {
   let res = 0;
   for (let i = 0; i < 4; i++) {
@@ -28,6 +29,7 @@ const activeIndex = computed(() => {
   }
   return res;
 });
+// 计算最新的步骤
 const activeStep = computed(() => {
   let step = 0;
   for (let i = 0; i < 4; i++) {
@@ -40,6 +42,7 @@ const activeStep = computed(() => {
   }
   return step;
 });
+// 计算最新步骤的状态
 const status = computed(() => {
   for (let i = 0; i <= 4; i++) {
     if (steps.value[i] === 3) {
@@ -51,6 +54,7 @@ const status = computed(() => {
   }
   return "process";
 });
+// 计算下一个步骤
 const epicycle_ = computed(() => {
   return activeIndex.value === 0
     ? "test"
@@ -62,6 +66,7 @@ const epicycle_ = computed(() => {
     ? "check2"
     : "Offer";
 });
+// 更新下一个步骤结果
 const handleNext = async (result: number) => {
   const epicycle = epicycle_.value;
   const { error } = await submitEpicycleResult({

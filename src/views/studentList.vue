@@ -9,7 +9,7 @@ import { ref } from "vue";
 import { computed } from "@vue/reactivity";
 import Steps from "@/components/steps.vue";
 import type { Progress } from "@/type/progress";
-
+import { downloadPDF } from "@/utils/pdf";
 
 interface Position {
   pid: string;
@@ -87,7 +87,7 @@ const getDeliveredInfoAPICall = async () => {
     console.log(error);
     return;
   }
-  console.log(data)
+  console.log(data);
   tableData.value = (data as Progress[]).map((el: Progress) => {
     const {
       pid,
@@ -103,7 +103,7 @@ const getDeliveredInfoAPICall = async () => {
       offer,
       created_at,
     } = el;
-    const progress="nihao"
+    const progress = "nihao";
     return {
       pid,
       email,
@@ -130,6 +130,10 @@ const handleViewResume = async (row: Position) => {
     resume.value = JSON.stringify(data);
     dialogVisible.value = true;
   }
+};
+const handleDownloadResume = () => {
+  console.log(111)
+  downloadPDF("resume-item")
 };
 const handleClose = () => {
   dialogVisible.value = false;
@@ -197,11 +201,12 @@ const handleClose = () => {
   </el-table>
   <el-dialog
     v-model="dialogVisible"
-    title="Tips"
+    title="简历"
     width="30%"
     :before-close="handleClose"
   >
-    <el-input v-model="resume" type="textarea" />
+    <el-input id="resume-item" v-model="resume" type="textarea" />
+    <el-button @click="handleDownloadResume">下载简历</el-button>
   </el-dialog>
 </template>
 <style scoped></style>
